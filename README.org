@@ -1,0 +1,3 @@
+* logrusredis - a logrus hook can log to redis
+
+/just work well for personal./
