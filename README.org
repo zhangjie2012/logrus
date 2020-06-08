@@ -1,3 +1,5 @@
 * logrusredis - a logrus hook can log to redis
 
-/just work well for personal./
+usage checkout =example/main.go=
+
+/just worked for personal./
