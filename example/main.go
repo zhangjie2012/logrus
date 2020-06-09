@@ -36,8 +36,7 @@ type FakeUser struct {
 
 // 2000/s - 10000/s
 func RandomAction(r *rand.Rand) (time.Duration, string) {
-	// ms := r.Intn(400) + 100 // 100 - 500 Microsecond
-	ms := 100
+	ms := r.Intn(400) + 100 // 100 - 500 Microsecond
 	actions := []string{
 		"alley-oop",
 		"assist",
