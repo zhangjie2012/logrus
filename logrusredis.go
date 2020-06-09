@@ -47,20 +47,21 @@ func (h *LogrusRedisHook) Levels() []logrus.Level {
 }
 
 type LogS struct {
-	Timestamp int64  `json:"timestamp"`
-	AppName   string `json:"appname"`
-	Ip        string `json:"ip"`
-	Level     string `json:"level"`
-	Caller    string `json:"caller"`
-	Msg       string `json:"msg"`
+	Timestamp int64         `json:"@timestamp"`
+	AppName   string        `json:"@appname"`
+	MetaData  logrus.Fields `json:"@metadata"` // map[string]interface{}
+	Ip        string        `json:"@ip"`
+	Level     string        `json:"@level"`
+	Caller    string        `json:"@caller"`
+	Msg       string        `json:"@msg"`
 }
 
 func (h *LogrusRedisHook) Fire(e *logrus.Entry) error {
-	// `e.Data` not support
 	caller := fmt.Sprintf("%s:%d", filepath.Base(e.Caller.File), e.Caller.Line)
 	log := LogS{
 		Timestamp: e.Time.UnixNano(),
 		AppName:   h.option.AppName,
+		MetaData:  e.Data,
 		Ip:        h.option.Ip,
 		Level:     e.Level.String(),
 		Caller:    caller,

@@ -49,4 +49,5 @@ func main() {
 	logrus.Infoln("this is one info line")
 	logrus.Warnln("this is one warn line")
 	logrus.Errorln("this is one warn line")
+	logrus.WithFields(logrus.Fields{"username": "JerryZhang"}).Infof("hello world")
 }
