@@ -11,3 +11,11 @@ if you don't have a business server, like pure Android/iOS app, but you still wa
 In this scenario, your can use =basichttp= as a proxy, insert log to redis directly(do not write one line code).
 
 =go build -o loghttp basichttp/main.go=
+
+** performance
+
+write to redis will cause latency, if your server very high performance requirements, don't use this.
+
+[[file:bm.png]]
+
+P90 lower than 5ms.
