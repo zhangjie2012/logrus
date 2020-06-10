@@ -57,7 +57,11 @@ type LogS struct {
 }
 
 func (h *LogrusRedisHook) Fire(e *logrus.Entry) error {
-	caller := fmt.Sprintf("%s:%d", filepath.Base(e.Caller.File), e.Caller.Line)
+	caller := ""
+	if e.Caller != nil {
+		caller = fmt.Sprintf("%s:%d", filepath.Base(e.Caller.File), e.Caller.Line)
+	}
+
 	log := LogS{
 		Timestamp: e.Time.UnixNano(),
 		AppName:   h.option.AppName,
