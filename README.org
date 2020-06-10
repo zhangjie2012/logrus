@@ -9,3 +9,5 @@ usage checkout =example/main.go=
 if you don't have a business server, like pure Android/iOS app, but you still want some store log and do some data analysis job.
 
 In this scenario, your can use =basichttp= as a proxy, insert log to redis directly(do not write one line code).
+
+=go build -o loghttp basichttp/main.go=
