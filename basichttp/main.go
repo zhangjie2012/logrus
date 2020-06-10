@@ -6,10 +6,28 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
 	"github.com/zhangjie2012/logrusredis"
 )
+
+var (
+	apiDurations = prometheus.NewSummaryVec(
+		prometheus.SummaryOpts{
+			Name:       "http_log_report_durations",
+			Help:       "http log report latency.",
+			Objectives: map[float64]float64{0.5: 0.05, 0.9: 0.01, 0.99: 0.001},
+		},
+		[]string{"api_name", "status"},
+	)
+)
+
+func init() {
+	prometheus.MustRegister(apiDurations)
+}
 
 type LogS struct {
 	// fatal, error, warn, info, debug, trace
@@ -35,6 +53,7 @@ func main() {
 	flag.Parse()
 
 	// logrus init
+	// logrus.SetOutput(ioutil.Discard)
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetReportCaller(false)
 	option := logrusredis.Option{
@@ -53,11 +72,19 @@ func main() {
 	logrus.AddHook(hook)
 
 	http.HandleFunc("/log", func(w http.ResponseWriter, req *http.Request) {
+		start := time.Now()
+		status := ""
+		defer func() {
+			d := time.Since(start)
+			apiDurations.WithLabelValues("/log", status).Observe(float64(d))
+		}()
+
 		defer req.Body.Close()
 		bs, err := ioutil.ReadAll(req.Body)
 		if err != nil {
 			log.Printf("ioutil read body failure, %s", err)
 			w.Write([]byte(err.Error()))
+			status = "error"
 			return
 		}
 
@@ -65,12 +92,21 @@ func main() {
 		if err := json.Unmarshal(bs, &logS); err != nil {
 			log.Printf("marshal json failure, %s", err)
 			w.Write([]byte(err.Error()))
+			status = "error"
 			return
 		}
-
 		logrus.WithFields(logS.MetaData).Log(logS.Level, logS.Msg)
 
 		w.Write([]byte("ok"))
+		status = "ok"
 	})
+
+	http.Handle("/metrics", promhttp.HandlerFor(
+		prometheus.DefaultGatherer,
+		promhttp.HandlerOpts{
+			EnableOpenMetrics: true,
+		},
+	))
+
 	http.ListenAndServe(hostAddr, nil)
 }
