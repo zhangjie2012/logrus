@@ -73,11 +73,11 @@ func PlayGame(ctx context.Context, wg *sync.WaitGroup, user FakeUser) {
 	)
 
 	if user.ID < 6 {
-		key = "logs_east"
-		appName = "nba_east"
+		key = "logs:east"
+		appName = "nba:east"
 	} else {
-		key = "logs_west"
-		appName = "nba_weat"
+		key = "logs:west"
+		appName = "nba:weat"
 	}
 	option := logrusredis.Option{
 		Addr:     "localhost:6379",
