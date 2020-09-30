@@ -1,1 +1,24 @@
-* logrusredis - a logrus log to redis
+* logrusredis hook
+
+a [[https://github.com/sirupsen/logrus][logrus]] hook print log to redis list(=RPUSH= command).
+
+** Install
+
+#+begin_src
+go get github.com/zhangjie2012/logrusredis-hook
+#+end_src
+
+** Usage
+
+#+begin_src go
+  option := RedisOption{
+	  Addr:     "localhost:6379",
+	  Password: "",
+	  DB:       0,
+	  Key:      "logrusredis.hook",
+  }
+  hook, _ := NewHook(appName, &option, nil)
+  logrus.AddHook(hook)
+#+end_src
+
+**Sometime**, We want customize inserted redis struct, you can customize a =LogWashFunc=, checkout =logrusredis_test.go= file.
