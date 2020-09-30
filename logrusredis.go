@@ -47,7 +47,7 @@ func (h *LogrusRedisHook) Fire(e *logrus.Entry) (err error) {
 		return nil
 	}
 
-	_, err = h.rClient.LPush(h.option.Key, bs).Result()
+	_, err = h.rClient.RPush(h.option.Key, bs).Result()
 	return
 }
 
