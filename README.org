@@ -1,17 +1,1 @@
-* logrusredis - a logrus hook can log to redis
-
-usage checkout =example/main.go=
-
-/just worked for personal./
-
-** basichttp
-
-if you don't have a business server, like pure Android/iOS app, but you still want some store log and do some data analysis job.
-
-In this scenario, your can use =basichttp= as a proxy, insert log to redis directly(do not write one line code).
-
-=go build -o loghttp basichttp/main.go=
-
-** performance
-
-write to redis will cause little latency, in my local test, one =LPUSH= cost =61.719µs=
+* logrusredis - a logrus log to redis
