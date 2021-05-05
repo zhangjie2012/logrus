@@ -1,4 +1,4 @@
-# logrusredis hook
+# logrusredis hook migrate to https://github.com/zhangjie2012/logrus-hook
 
 a [logrus](https://github.com/sirupsen/logrus) hook print log to redis list(`RPUSH` command).
 
